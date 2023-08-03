@@ -1,10 +1,9 @@
 #!/bin/bash
 
 PSQL="psql --username=freecodecamp --dbname=number_guess -t --no-align -c"
-RANDOM_NUM=$(( RANDOM % 1000 ))
-echo $RANDOM_NUM
+RANDOM_NUM=$(( RANDOM % 1000 +1 ))
 
-echo -e -n "\nEnter your username: "
+echo -e -n "Enter your username: "
 read USERNAME
 
 USER_DETAILS=$($PSQL "select user_id, games_played, best_game from users where username = '$USERNAME'";)
@@ -44,7 +43,6 @@ echo -e "\nYou guessed it in $GUESS_COUNT tries. The secret number was $RANDOM_N
 
 if [[ $GUESS_COUNT < $BEST_GAME ]]
 then
-  echo "You did better!"
   BEST_GAME=$GUESS_COUNT
 fi
 
