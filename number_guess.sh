@@ -31,10 +31,10 @@ do
     read GUESS
   done
 
-  if [[ $GUESS < $RANDOM_NUM ]]
+  if [[ $GUESS > $RANDOM_NUM ]]
   then
     echo -e -n "\nIt's lower than that, guess again:"
-  elif [[ $GUESS > $RANDOM_NUM ]]
+  elif [[ $GUESS < $RANDOM_NUM ]]
   then
      echo -e -n "\nIt's higher than that, guess again:"
   fi
