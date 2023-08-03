@@ -3,14 +3,16 @@
 PSQL="psql --username=freecodecamp --dbname=number_guess -t --no-align -c"
 RANDOM_NUM=$(( RANDOM % 1000 +1 ))
 
-echo -e -n "Enter your username: "
+echo "Enter your username:"
 read USERNAME
 
 USER_DETAILS=$($PSQL "select user_id, games_played, best_game from users where username = '$USERNAME'";)
 if [[ -z $USER_DETAILS ]]
 then
-  echo -e "Welcome, $USERNAME! It looks like this is your first time here."
+  echo "Welcome, $USERNAME! It looks like this is your first time here."
   ENTER_USER_RESULT=$($PSQL "insert into users(username) values('$USERNAME');")
+  USER_DETAILS=$($PSQL "select user_id, games_played, best_game from users where username = '$USERNAME'";)
+  IFS='|' read -r USER_ID GAMES_PLAYED BEST_GAME <<< "$USER_DETAILS"
 else
   IFS='|' read -r USER_ID GAMES_PLAYED BEST_GAME <<< "$USER_DETAILS"
   echo -e "Welcome back, $USERNAME! You have played $GAMES_PLAYED games, and your best game took $BEST_GAME guesses."
@@ -19,7 +21,7 @@ fi
 GUESS_COUNT=0
 
 echo -e -n "\nGuess the secret number between 1 and 1000: "
-while [[ $GUESS != $RANDOM_NUM ]]
+while [[ ! $GUESS =~ ^[0-9]+$ || $GUESS != $RANDOM_NUM ]]
 do
   read GUESS
   until [[ $GUESS =~ ^[0-9]+$ ]]
